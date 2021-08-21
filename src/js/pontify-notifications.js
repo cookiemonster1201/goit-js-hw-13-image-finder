@@ -4,7 +4,7 @@ export { noticeMsg, errorMsg, infoMsg, successMsg };
 
 function noticeMsg() {
   notice({
-    text: 'Welcome back ;)',
+    text: 'Please make a more specific request',
   });
 }
 

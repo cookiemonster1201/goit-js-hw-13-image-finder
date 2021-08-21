@@ -79,6 +79,11 @@ function clearMarkup() {
 async function renderImages() {
   try {
     const images = await imageSearchApi.fetchData();
+    console.log(images);
+    if (images.length === 0) {
+      noticeMsg();
+      return;
+    }
     successMsg(imageSearchApi.page);
     appendMarkup(images);
   } catch {
