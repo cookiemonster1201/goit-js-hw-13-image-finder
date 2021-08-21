@@ -134,6 +134,11 @@ body {
   }
 }
 
+.search-form__btn {
+  background-color: transparent;
+  border: none;
+}
+
 .search-form__icon {
   transform: scale(1);
   transition: transform 200ms linear;
