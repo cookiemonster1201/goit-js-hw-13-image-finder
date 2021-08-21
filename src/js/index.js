@@ -11,7 +11,6 @@ import scrollUp from './scroll-up';
 const KEY = '22995461-dcfca2d4906f7ecb85a6d619d';
 const BASE_URL = 'https://pixabay.com/api/?';
 const imageSearchApi = new ImageSearchApi(KEY, BASE_URL);
-
 registerIntersectionObserver();
 infoMsg();
 
@@ -58,14 +57,12 @@ function onSearchOptionClick(e) {
     imageSearchApi.isEditorsChoice = true;
     imageSearchApi.searchOption = '';
     renderImages();
-    imageSearchApi.incrementPage();
     return;
   }
 
   imageSearchApi.searchOption = e.target.textContent.toLowerCase();
   imageSearchApi.isEditorsChoice = false;
   renderImages();
-  imageSearchApi.incrementPage();
 }
 
 function appendMarkup(data) {
@@ -86,6 +83,7 @@ async function renderImages() {
     }
     successMsg(imageSearchApi.page);
     appendMarkup(images);
+    imageSearchApi.incrementPage();
   } catch {
     onError();
   }
@@ -101,10 +99,9 @@ function registerIntersectionObserver() {
 
   function onEntry(entries) {
     entries.forEach(entry => {
-      if (entry.isIntersecting && imageSearchApi.page !== 1) {
+      if (entry.isIntersecting && imageSearchApi.page > 1) {
         refs.loadingDots.classList.add('is-visible');
         renderImages();
-        imageSearchApi.incrementPage();
       }
     });
   }

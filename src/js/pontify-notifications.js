@@ -2,9 +2,13 @@ import { success, error, info, notice } from '@pnotify/core';
 
 export { noticeMsg, errorMsg, infoMsg, successMsg };
 
-function noticeMsg() {
+function noticeMsg(pageNumber) {
+  if (pageNumber > 1) {
+    return;
+  }
   notice({
     text: 'Please make a more specific request',
+    delay: 2000,
   });
 }
 
@@ -16,7 +20,7 @@ function infoMsg() {
 }
 
 function successMsg(pageNumber) {
-  if (pageNumber !== 2) {
+  if (pageNumber > 1) {
     return;
   }
   success({
@@ -28,6 +32,6 @@ function successMsg(pageNumber) {
 function errorMsg() {
   error({
     text: 'Sorry, something went wrong(...',
-    delay: 3500,
+    delay: 2000,
   });
 }
