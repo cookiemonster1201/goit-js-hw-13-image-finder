@@ -8,7 +8,7 @@ export default class ImageSearchApi {
     this.isEditorsChoice = false;
   }
 
-  fetchData() {
+  async fetchData() {
     const searchParams = new URLSearchParams({
       q: this.query,
       page: this.page,
@@ -18,9 +18,12 @@ export default class ImageSearchApi {
     });
     const url = `${this.baseUrl}image_type=photo&orientation=horizontal&per_page=12&${searchParams}`;
 
-    return fetch(url)
-      .then(response => response.json())
-      .then(data => data.hits);
+    const response = await fetch(url);
+    if (response.status === 404) {
+      throw new Error();
+    }
+    const data = await response.json();
+    return data.hits;
   }
 
   resetPage() {

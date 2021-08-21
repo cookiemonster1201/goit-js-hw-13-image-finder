@@ -11,6 +11,7 @@ import scrollUp from './scroll-up';
 const KEY = '22995461-dcfca2d4906f7ecb85a6d619d';
 const BASE_URL = 'https://pixabay.com/api/?';
 const imageSearchApi = new ImageSearchApi(KEY, BASE_URL);
+
 registerIntersectionObserver();
 infoMsg();
 
@@ -29,7 +30,7 @@ function onSubmit(e) {
   clearMarkup();
   imageSearchApi.resetPage();
   imageSearchApi.searchQuery = e.target.elements.query.value;
-  renderImage();
+  renderImages();
   imageSearchApi.incrementPage();
   e.target.elements.query.value = '';
 }
@@ -38,7 +39,10 @@ function onImageClick(e) {
   if (e.target.nodeName !== 'IMG') {
     return;
   }
-  showLightboxImage(e.target.dataset.source, e.target.alt);
+  const largeImgSrc = e.target.dataset.source;
+  const largeImgAlt = e.target.alt;
+
+  showLightboxImage(largeImgSrc, largeImgAlt);
 }
 
 function onSearchOptionClick(e) {
@@ -53,14 +57,14 @@ function onSearchOptionClick(e) {
   if (e.target.textContent === "Editor's Choice") {
     imageSearchApi.isEditorsChoice = true;
     imageSearchApi.searchOption = '';
-    renderImage();
+    renderImages();
     imageSearchApi.incrementPage();
     return;
   }
 
   imageSearchApi.searchOption = e.target.textContent.toLowerCase();
   imageSearchApi.isEditorsChoice = false;
-  renderImage();
+  renderImages();
   imageSearchApi.incrementPage();
 }
 
@@ -72,20 +76,21 @@ function clearMarkup() {
   refs.gallery.innerHTML = '';
 }
 
-function renderImage() {
-  imageSearchApi
-    .fetchData()
-    .then(data => {
-      successMsg(imageSearchApi.page);
-      return appendMarkup(data);
-    })
-    .catch(onError);
+async function renderImages() {
+  try {
+    const images = await imageSearchApi.fetchData();
+    successMsg(imageSearchApi.page);
+    appendMarkup(images);
+  } catch {
+    onError();
+  }
 }
 
 function registerIntersectionObserver() {
   const options = {
     rootMargin: '200px',
   };
+
   const observer = new IntersectionObserver(onEntry, options);
   observer.observe(refs.sentinel);
 
@@ -93,7 +98,7 @@ function registerIntersectionObserver() {
     entries.forEach(entry => {
       if (entry.isIntersecting && imageSearchApi.page !== 1) {
         refs.loadingDots.classList.add('is-visible');
-        renderImage();
+        renderImages();
         imageSearchApi.incrementPage();
       }
     });

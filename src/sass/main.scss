@@ -134,6 +134,15 @@ body {
   }
 }
 
+.search-form__icon {
+  transform: scale(1);
+  transition: transform 200ms linear;
+  &:hover {
+    transform: scale(1.2);
+    transition: transform 200ms linear;
+  }
+}
+
 // dots animation//
 
 .dot-flashing {
