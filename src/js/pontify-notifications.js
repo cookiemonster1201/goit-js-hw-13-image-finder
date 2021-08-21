@@ -2,10 +2,7 @@ import { success, error, info, notice } from '@pnotify/core';
 
 export { noticeMsg, errorMsg, infoMsg, successMsg };
 
-function noticeMsg(pageNumber) {
-  if (pageNumber > 1) {
-    return;
-  }
+function noticeMsg() {
   notice({
     text: 'Please make a more specific request',
     delay: 2000,
@@ -20,7 +17,7 @@ function infoMsg() {
 }
 
 function successMsg(pageNumber) {
-  if (pageNumber > 1) {
+  if (pageNumber < 2 || pageNumber > 3) {
     return;
   }
   success({
