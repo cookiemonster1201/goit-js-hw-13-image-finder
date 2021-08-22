@@ -88,7 +88,7 @@ async function renderImages() {
 
 function registerIntersectionObserver() {
   const options = {
-    rootMargin: '200px',
+    rootMargin: '500px',
   };
 
   const observer = new IntersectionObserver(onEntry, options);
