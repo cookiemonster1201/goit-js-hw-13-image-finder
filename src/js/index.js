@@ -134,5 +134,5 @@ function loadInitialImages() {
 function showStats() {
   setTimeout(() => {
     document.querySelectorAll('.stats').forEach(stat => stat.classList.add('are-visible'));
-  }, 400);
+  }, 0);
 }
