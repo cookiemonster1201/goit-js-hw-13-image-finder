@@ -10,7 +10,7 @@ import scrollUp from './scroll-up';
 
 const KEY = '22995461-dcfca2d4906f7ecb85a6d619d';
 const BASE_URL = 'https://pixabay.com/api/?';
-const imageSearchApi = new ImageSearchApi(KEY, BASE_URL);
+const imageSearchApi = new ImageSearchApi(KEY, BASE_URL, refs.loadingDots);
 
 registerIntersectionObserver();
 infoMsg();
@@ -27,12 +27,30 @@ function onSubmit(e) {
 
   imageSearchApi.searchOption = '';
   imageSearchApi.isEditorsChoice = false;
-  clearMarkup();
-  imageSearchApi.resetPage();
+  resetApi();
   imageSearchApi.searchQuery = e.target.elements.query.value;
-  renderImages();
-  imageSearchApi.incrementPage();
+  loadInitialImages();
   e.target.elements.query.value = '';
+}
+
+function onSearchOptionClick(e) {
+  if (e.target.nodeName !== 'BUTTON') {
+    return;
+  }
+
+  resetApi();
+  imageSearchApi.searchQuery = '';
+
+  if (e.target.textContent === "Editor's Choice") {
+    imageSearchApi.isEditorsChoice = true;
+    imageSearchApi.searchOption = '';
+    loadInitialImages();
+    return;
+  }
+
+  imageSearchApi.searchOption = e.target.textContent.toLowerCase();
+  imageSearchApi.isEditorsChoice = false;
+  loadInitialImages();
 }
 
 function onImageClick(e) {
@@ -43,29 +61,6 @@ function onImageClick(e) {
   const largeImgAlt = e.target.alt;
 
   showLightboxImage(largeImgSrc, largeImgAlt);
-}
-
-function onSearchOptionClick(e) {
-  if (e.target.nodeName !== 'BUTTON') {
-    return;
-  }
-
-  clearMarkup();
-  imageSearchApi.resetPage();
-  imageSearchApi.searchQuery = '';
-
-  if (e.target.textContent === "Editor's Choice") {
-    imageSearchApi.isEditorsChoice = true;
-    imageSearchApi.searchOption = '';
-    renderImages();
-    imageSearchApi.incrementPage();
-    return;
-  }
-
-  imageSearchApi.searchOption = e.target.textContent.toLowerCase();
-  imageSearchApi.isEditorsChoice = false;
-  renderImages();
-  imageSearchApi.incrementPage();
 }
 
 function appendMarkup(data) {
@@ -83,7 +78,6 @@ async function renderImages() {
       noticeMsg();
       return;
     }
-    console.log(imageSearchApi.page);
 
     successMsg(imageSearchApi.page);
     appendMarkup(images);
@@ -103,7 +97,6 @@ function registerIntersectionObserver() {
   function onEntry(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting && imageSearchApi.page !== 1) {
-        refs.loadingDots.classList.add('is-visible');
         renderImages();
         imageSearchApi.incrementPage();
       }
@@ -113,4 +106,26 @@ function registerIntersectionObserver() {
 
 function onError() {
   errorMsg();
+}
+
+function showSentinel() {
+  setTimeout(() => {
+    refs.sentinel.classList.add('is-visible');
+  }, 1000);
+}
+
+function hideSentinel() {
+  refs.sentinel.classList.remove('is-visible');
+}
+
+function resetApi() {
+  hideSentinel();
+  clearMarkup();
+  imageSearchApi.resetPage();
+}
+
+function loadInitialImages() {
+  renderImages();
+  showSentinel();
+  imageSearchApi.incrementPage();
 }

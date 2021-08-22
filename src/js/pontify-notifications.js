@@ -17,7 +17,7 @@ function infoMsg() {
 }
 
 function successMsg(pageNumber) {
-  if (pageNumber < 2 || pageNumber > 3) {
+  if (pageNumber !== 2) {
     return;
   }
   success({

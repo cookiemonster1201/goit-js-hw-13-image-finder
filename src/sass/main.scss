@@ -227,3 +227,10 @@ body {
     transition: transform 300ms linear, box-shadow 150ms linear;
   }
 }
+
+.sentinel {
+  display: none;
+  &.is-visible {
+    display: block;
+  }
+}
