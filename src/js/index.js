@@ -71,7 +71,7 @@ function clearMarkup() {
   refs.gallery.innerHTML = '';
 }
 
-async function renderImages() {
+async function renderGallery() {
   try {
     const images = await imageSearchApi.fetchData();
     if (images.length === 0) {
@@ -81,6 +81,8 @@ async function renderImages() {
 
     successMsg(imageSearchApi.page);
     appendMarkup(images);
+    showSentinel();
+    showStats();
   } catch {
     onError();
   }
@@ -88,7 +90,7 @@ async function renderImages() {
 
 function registerIntersectionObserver() {
   const options = {
-    rootMargin: '500px',
+    rootMargin: '200px',
   };
 
   const observer = new IntersectionObserver(onEntry, options);
@@ -97,7 +99,7 @@ function registerIntersectionObserver() {
   function onEntry(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting && imageSearchApi.page !== 1) {
-        renderImages();
+        renderGallery();
         imageSearchApi.incrementPage();
       }
     });
@@ -125,7 +127,12 @@ function resetApi() {
 }
 
 function loadInitialImages() {
-  renderImages();
-  showSentinel();
+  renderGallery();
   imageSearchApi.incrementPage();
+}
+
+function showStats() {
+  setTimeout(() => {
+    document.querySelectorAll('.stats').forEach(stat => stat.classList.add('are-visible'));
+  }, 400);
 }

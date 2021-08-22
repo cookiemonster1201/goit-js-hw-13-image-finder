@@ -105,10 +105,15 @@ body {
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
+  opacity: 0;
   color: rgba(128, 128, 128, 0.9);
   transition: color 250ms linear;
   &:not(:last-child) {
     margin-bottom: 4px;
+  }
+  &.are-visible {
+    opacity: 1;
+    transition: opacity 100ms linear;
   }
 }
 
